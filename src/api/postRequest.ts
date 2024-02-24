@@ -20,7 +20,7 @@ const postRequest = async (data: object) => {
             .then(responce => responce.json())
     }
     catch (error) {
-        console.log(error)
+        console.error(error)
         throw error
     }
 }

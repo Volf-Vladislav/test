@@ -1,41 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
-import Card from './components/templates/Card'
+import { changeProducts } from './redux/productSlice/productSlice'
 
-import Product from './types/Product'
+import MainPage from './components/pages/MainPage'
+
 import postRequest from './api/postRequest'
 
 import '../src/scss/main.scss'
 
 const data = {
-  action: 'get_items',
-  params: { ids: ['1789ecf3-f81c-4f49-ada2-83804dcc74b0'] },
+  action: 'get_ids',
+  params: { offset: 1, limit: 10 },
 }
 
 const App = () => {
-  const [first, setfirst] = useState<Array<Product>>([])
+  const dispatch = useDispatch()
+  console.log('App render')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     postRequest(data)
-      .then(data => {
-        setfirst(data.result)
-        console.log(data)
-      })
-      .catch(err => console.log(err))
-  }, [])
+      .then(data => dispatch(changeProducts(data.result)))
+      .catch(err => console.error(err))
+  }, [dispatch])
 
-  return (
-    <div className=''>
-      {first.map(item => (
-        <Card
-          price={item.price}
-          id={item.id}
-          brand={item.brand}
-          product={item.product}
-        />
-      ))}
-    </div>
-  )
+  return <MainPage />
 }
 
 export default App

@@ -1,16 +1,17 @@
 @import url('./normalize.scss');
 
 @font-face {
-    font-family: Roboto;
-    src: url(./fonts/Roboto/Roboto.ttf);
+  font-family: Roboto;
+  src: url(./fonts/Roboto/Roboto.ttf);
 }
 
 @import url('./darkTheme.scss');
 @import url('./templates/card.scss');
+@import url('./pages/mainPage.scss');
 
-#app {
+html {
+  #app {
     font-family: 'Roboto', 'Times New Roman';
     background: var(--background);
-    min-height: 100vh;
-    min-width: 100vw;
+  }
 }
