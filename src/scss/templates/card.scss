@@ -1,0 +1,25 @@
+.card {
+    background: var(--ui);
+    border-radius: 12px;
+    border: 1px solid var(--borderDefault);
+    padding: 20px;
+
+
+    color: white;
+
+    div {
+        margin-bottom: 10px;
+    }
+
+    .name {
+        color: var(--titleText);
+    }
+
+    .price {
+        color: var(--defaultText);
+    }
+
+    .brand {
+        color: var(--text);
+    }
+}
