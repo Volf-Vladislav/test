@@ -1,0 +1,53 @@
+.controlPanel {
+  position: fixed;
+  width: 16vw;
+
+  top: 80px;
+  right: 30px;
+
+  .nullFilter {
+    cursor: pointer;
+    margin-bottom: 30px;
+
+    p {
+      font-size: 16px;
+      color: var(--titleText);
+    }
+  }
+
+  .priceFilter {
+    margin-bottom: 30px;
+
+    .title {
+        font-size: 17px;
+        color: var(--titleText);
+        margin-bottom: 8px;
+    }
+    input {
+
+    }
+
+    button {
+        cursor: pointer;
+        background: var(--buttonBg);
+        color: var(--buttonText);
+        margin-left: 5px;
+        border: none;
+    }
+  }
+
+  .brandlist {
+    .title {
+      font-size: 17px;
+      margin-bottom: 10px;
+      color: var(--titleText);
+    }
+
+    .brand {
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 7px;
+      color: var(--defaultText);
+    }
+  }
+}

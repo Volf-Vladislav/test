@@ -13,7 +13,7 @@ const Card = (props: Product) => {
       <div className='image'></div>
       <div className='info'>
         <div className='name'>{product}</div>
-        <div className='brand'>бренд {brand || 'Нет информации'}</div>
+        <div className='brand'>бренд {brand || 'нет'}</div>
         <div className='price'>цена {Russian.format(price)}</div>
       </div>
     </div>

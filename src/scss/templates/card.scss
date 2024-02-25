@@ -16,16 +16,18 @@
 
   .info {
     padding: 20px;
+    text-align: center;
+
     .name {
       color: var(--titleText);
-      font-size: 18px;
+      font-size: 16px;
 
-      width: 320px;
+      width: 240px;
       margin-bottom: 20px;
     }
     .price {
       color: var(--defaultText);
-      font-size: 16px;
+      font-size: 15px;
     }
     .brand {
       color: var(--text);

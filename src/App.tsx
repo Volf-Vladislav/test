@@ -1,37 +1,34 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { changeProducts } from './redux/productSlice/productSlice'
+import { RootState } from './redux/store'
+import { changeDisplayProducts } from './redux/productSlice/productSlice'
 
 import Header from './components/templates/Header'
 import MainPage from './components/pages/MainPage'
-import ControlPanel from './components/pages/ControlPanel'
-import Footer from './components/templates/Footer'
+import ControlPanel from './components/ui/ControlPanel'
+import Pagination from './components/ui/Pagination'
 
 import postRequest from './api/postRequest'
 
 import '../src/scss/main.scss'
 
-const data = {
-  action: 'get_ids',
-  params: { offset: 0, limit: 49 },
-}
-
 const App = () => {
+  const request = useSelector((state: RootState) => state.product.request)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    postRequest(data)
-      .then(data => dispatch(changeProducts(data.result)))
+    postRequest(request)
+      .then(data => dispatch(changeDisplayProducts(data.result)))
       .catch(err => console.error(err))
-  }, [dispatch])
+  }, [request])
 
   return (
     <main>
       <Header />
       <MainPage />
       <ControlPanel />
-      <Footer />
+      <Pagination />
     </main>
   )
 }

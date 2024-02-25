@@ -9,8 +9,8 @@
 @import url('./templates/card.scss');
 @import url('./pages/mainPage.scss');
 @import url('./templates/header.scss');
-@import url('./templates/footer.scss');
-@import url('./pages/controlPanel.scss');
+@import url('./ui/controlPanel.scss');
+@import url('./ui/pagination.scss');
 
 #app {
   font-family: 'Roboto', 'Times New Roman';
@@ -20,6 +20,12 @@
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
+
+  main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 *::-webkit-scrollbar {

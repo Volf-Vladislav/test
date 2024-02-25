@@ -7,8 +7,7 @@
     padding-left: 10px;
 }
 
-.loading {
-    height: 100vh;
+.loading, .error, .noResults {
     max-width: 80vw;
 
     color: var(--activeColor);

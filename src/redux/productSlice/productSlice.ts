@@ -2,22 +2,30 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface CounterState {
-  ids: string[]
+  ids: string[],
+  request: object
 }
 
 const initialState: CounterState = {
-    ids: [],
+  ids: [],
+  request: {
+    action: "get_ids",
+    params: { "offset": 0, "limit": 50 }
+  }
 }
 
 export const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    changeProducts: (state, action: PayloadAction<Array<string>>) => {
-        state.ids = action.payload
+    changeDisplayProducts: (state, action: PayloadAction<Array<string>>) => {
+      state.ids = action.payload
+    },
+    changeRequest: (state, action: PayloadAction<object>) => {
+      state.request = action.payload
     }
-  },
+  }
 })
 
-export const { changeProducts } = productSlice.actions
+export const { changeDisplayProducts, changeRequest } = productSlice.actions
 export default productSlice.reducer
