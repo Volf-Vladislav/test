@@ -1,0 +1,12 @@
+header {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+
+    background: red;
+    width: 100vw;
+    height: 70px;
+
+    background: var(--ui);
+    border-bottom: 1px solid var(--borderChat);
+}

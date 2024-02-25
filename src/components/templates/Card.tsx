@@ -10,9 +10,12 @@ const Card = (props: Product) => {
 
   return (
     <div className='card' id={id}>
-      <div className='name'>{product}</div>
-      <div className='brand'>бренд {brand || 'Нет информации'}</div>
-      <div className='price'>цена {Russian.format(price)}</div>
+      <div className='image'></div>
+      <div className='info'>
+        <div className='name'>{product}</div>
+        <div className='brand'>бренд {brand || 'Нет информации'}</div>
+        <div className='price'>цена {Russian.format(price)}</div>
+      </div>
     </div>
   )
 }

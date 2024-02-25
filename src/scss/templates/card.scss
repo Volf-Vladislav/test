@@ -2,25 +2,36 @@
   background: var(--ui);
   border-radius: 12px;
   border: 1px solid var(--borderDefault);
-  padding: 20px;
 
   color: white;
 
-  div {
-    margin-bottom: 10px;
+  .image {
+    width: 100%;
+    height: 200px;
+
+    background: #181818a3;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
   }
 
-  .name {
-    color: var(--titleText);
-    height: 60px;
-    width: 190px;
-  }
+  .info {
+    padding: 20px;
+    .name {
+      color: var(--titleText);
+      font-size: 18px;
 
-  .price {
-    color: var(--defaultText);
-  }
+      width: 320px;
+      margin-bottom: 20px;
+    }
+    .price {
+      color: var(--defaultText);
+      font-size: 16px;
+    }
+    .brand {
+      color: var(--text);
+      font-size: 14px;
 
-  .brand {
-    color: var(--text);
+      margin-bottom: 5px;
+    }
   }
 }
