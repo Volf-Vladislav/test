@@ -5,7 +5,9 @@ import { RootState } from '../../redux/store'
 import Card from '../../components/templates/Card'
 import postRequest from '../../api/postRequest'
 import Product from '../../types/Product'
+import Dropdown from '../templates/Dropdown'
 
+import createRequest from '../../helpers/createRequest'
 import { removeDuplicates } from '../../helpers/productsHelper'
 
 enum PageState {
@@ -21,21 +23,23 @@ const MainPage = () => {
   const ids = useSelector((state: RootState) => state.product.ids)
 
   useEffect(() => {
-    if (ids.length !== 0) {
+    const sendRequest = () => {
+      
       setState(PageState.loading)
-      postRequest({
-        action: 'get_items',
-        params: { ids: ids },
-      })
+      postRequest(createRequest('get_items', { ids: ids.slice(0, 50) }))
         .then(data => {
-          const uniqueItems = removeDuplicates(data.result, 'id')
-          setItems(uniqueItems)
+          setItems(removeDuplicates(data.result, 'id'))
+
           setState(PageState.ready)
         })
         .catch(err => {
+          sendRequest()
           console.error(err)
-          setState(PageState.error)
         })
+    }
+
+    if (ids.length !== 0) {
+      sendRequest()
     } else {
       setState(PageState.noResults)
     }
@@ -51,20 +55,26 @@ const MainPage = () => {
     case 3: {
       return (
         <div className='mainPage'>
-          {items.map(item => (
-            <Card
-              key={item.id}
-              price={item.price}
-              id={item.id}
-              brand={item.brand}
-              product={item.product}
-            />
-          ))}
+          <div className='sortButton'>
+            <p>Отсортировать по</p>
+            <Dropdown items={['Цене ↓', 'Цене ↑', 'Бренду', 'Названию']}/>
+          </div>
+          <div className='wrapp'>
+            {items.map((item, i) => (
+              <Card
+                key={item.id + i}
+                price={item.price}
+                id={item.id}
+                brand={item.brand}
+                product={item.product}
+              />
+            ))}
+          </div>
         </div>
       )
     }
     case 4: {
-      return <div className='error'>Не удалось получить данные с сервера</div>
+      return <div className='error'>Ошибка сервера, обновление</div>
     }
   }
 }

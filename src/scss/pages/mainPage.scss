@@ -1,10 +1,25 @@
 .mainPage {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 80vw;
+    .sortButton {
+        margin-left: 15px;
+        margin-bottom: 20px;
+        margin-top: 10px;
 
-    gap: 10px;
-    padding-left: 10px;
+        display: flex;
+        align-items: center;
+
+        p {
+            color: var(--text);
+            margin-right: 5px;
+        }
+    }
+    .wrapp {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 80vw;
+    
+        gap: 10px;
+        padding-left: 10px;
+    }
 }
 
 .loading, .error, .noResults {

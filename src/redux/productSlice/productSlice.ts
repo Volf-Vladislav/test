@@ -1,17 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+import createRequest from '../../helpers/createRequest'
+
 interface CounterState {
   ids: string[],
-  request: object
+  request: object,
+  currentStep: number
 }
 
 const initialState: CounterState = {
   ids: [],
-  request: {
-    action: "get_ids",
-    params: { "offset": 0, "limit": 50 }
-  }
+  request: createRequest('get_ids', {}),
+  currentStep: 50
 }
 
 export const productSlice = createSlice({
@@ -23,6 +24,9 @@ export const productSlice = createSlice({
     },
     changeRequest: (state, action: PayloadAction<object>) => {
       state.request = action.payload
+    },
+    increaseStep: (state) => {
+      state.currentStep += 50
     }
   }
 })

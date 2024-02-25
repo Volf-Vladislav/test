@@ -10,6 +10,7 @@ import ControlPanel from './components/ui/ControlPanel'
 import Pagination from './components/ui/Pagination'
 
 import postRequest from './api/postRequest'
+import { removeSame } from './helpers/productsHelper'
 
 import '../src/scss/main.scss'
 
@@ -19,7 +20,10 @@ const App = () => {
 
   useEffect(() => {
     postRequest(request)
-      .then(data => dispatch(changeDisplayProducts(data.result)))
+      .then(data => {
+        const uniqueIds = removeSame(data.result)
+        dispatch(changeDisplayProducts(uniqueIds))
+      })
       .catch(err => console.error(err))
   }, [request])
 

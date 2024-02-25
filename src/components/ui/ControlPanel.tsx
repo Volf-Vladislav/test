@@ -3,38 +3,27 @@ import { useDispatch } from 'react-redux'
 import { changeRequest } from '../../redux/productSlice/productSlice'
 
 import postRequest from '../../api/postRequest'
+import BrandCount from '../../types/BrandCount'
+import createRequest from '../../helpers/createRequest'
+import { countBrandRepeats } from '../../helpers/productsHelper'
 
 const ControlPanel = () => {
-  const [brands, setBrands] = useState<string[]>([])
+  const [brands, setBrands] = useState<Array<BrandCount>>([])
   const [price, setPrice] = useState<number>(0)
+
   const dispatch = useDispatch()
 
   const postNewRequest = (req: string) => {
-    dispatch(
-      changeRequest({
-        action: 'filter',
-        params: { brand: req },
-      }),
-    )
+    dispatch(changeRequest(createRequest('filter', { brand: req })))
   }
 
   const nullFilters = () => {
-    dispatch(
-      changeRequest({
-        action: 'get_ids',
-        params: { offset: 0, limit: 50 },
-      }),
-    )
+    dispatch(changeRequest(createRequest('get_ids', { offset: 0 })))
   }
 
-  const getItemsByPrice = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const getItemsByPrice = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(
-      changeRequest({
-        action: 'filter',
-        params: { price },
-      }),
-    )
+    dispatch(changeRequest(createRequest('filter', { price })))
   }
 
   useEffect(() => {
@@ -44,10 +33,8 @@ const ControlPanel = () => {
           action: 'get_fields',
           params: { field: 'brand' },
         })
-        const data = response.result
-        const uniqueBrands = [...new Set(data)]
-
-        setBrands(uniqueBrands)
+        const data: string[] = response.result
+        setBrands(countBrandRepeats(data))
       } catch (error) {
         console.error('Error fetching brands:', error)
       }
@@ -58,23 +45,31 @@ const ControlPanel = () => {
 
   return (
     <div className='controlPanel'>
-      <div className='nullFilter' onClick={nullFilters}>
+      <div className='nullFilter' >
         <p>Обнулить все фильтры</p>
+        <button onClick={nullFilters}>Ок</button>
       </div>
-      <form className='priceFilter' onSubmit={getItemsByPrice}>
+      <form
+        className='priceFilter'
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => getItemsByPrice(e)}
+      >
         <div className='title'>Поиск по цене</div>
         <input
           type='number'
           value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          onChange={e => setPrice(Number(e.target.value))}
         />
-        <button type="submit">Найти</button>
+        <button type='submit'>Найти</button>
       </form>
       <div className='brandlist'>
         <p className='title'>Нажмите на интересующий бренд</p>
         {brands.map((item, i) => (
-          <div className='brand' key={i} onClick={() => postNewRequest(item)}>
-            {item}
+          <div
+            className='brand'
+            key={i}
+            onClick={() => postNewRequest(item.name)}
+          >
+            {item.name} - {item.repeats}
           </div>
         ))}
       </div>

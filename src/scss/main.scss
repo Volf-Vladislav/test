@@ -11,6 +11,7 @@
 @import url('./templates/header.scss');
 @import url('./ui/controlPanel.scss');
 @import url('./ui/pagination.scss');
+@import url('./templates/dropdown.scss');
 
 #app {
   font-family: 'Roboto', 'Times New Roman';
@@ -25,6 +26,14 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+
+    button {
+      cursor: pointer;
+      background: var(--buttonBg);
+      color: var(--buttonText);
+      border: none;
+      text-transform: uppercase;
+    }
   }
 }
 
