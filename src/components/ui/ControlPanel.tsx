@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { changeRequest } from '../../redux/productSlice/productSlice'
 
@@ -13,12 +13,13 @@ const ControlPanel = () => {
 
   const dispatch = useDispatch()
 
-  const postNewRequest = (req: string) => {
-    dispatch(changeRequest(createRequest('filter', { brand: req })))
-  }
+  const postNewRequest = useCallback((brand:string) => {
+    dispatch(changeRequest(createRequest('filter', { brand })))
+  }, [dispatch])
 
   const nullFilters = () => {
-    dispatch(changeRequest(createRequest('get_ids', { offset: 0 })))
+    setPrice(0)
+    dispatch(changeRequest(createRequest('get_ids', {})))
   }
 
   const getItemsByPrice = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,26 +27,25 @@ const ControlPanel = () => {
     dispatch(changeRequest(createRequest('filter', { price })))
   }
 
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await postRequest({
-          action: 'get_fields',
-          params: { field: 'brand' },
+  useLayoutEffect(() => {
+    const getBrands = () => {
+      postRequest({
+        action: 'get_fields',
+        params: { field: 'brand' },
+      })
+        .then(data => setBrands(countBrandRepeats(data.result)))
+        .catch(err => {
+          console.error(err)
+          getBrands()
         })
-        const data: string[] = response.result
-        setBrands(countBrandRepeats(data))
-      } catch (error) {
-        console.error('Error fetching brands:', error)
-      }
     }
 
-    fetchBrands()
-  }, [])
+    getBrands()
+  }, [brands])
 
   return (
     <div className='controlPanel'>
-      <div className='nullFilter' >
+      <div className='nullFilter'>
         <p>Обнулить все фильтры</p>
         <button onClick={nullFilters}>Ок</button>
       </div>

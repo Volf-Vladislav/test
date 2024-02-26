@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 
 import Card from '../../components/templates/Card'
-import postRequest from '../../api/postRequest'
 import Product from '../../types/Product'
 import Dropdown from '../templates/Dropdown'
+import Pagination from '../ui/Pagination'
 
 import createRequest from '../../helpers/createRequest'
+import postRequest from '../../api/postRequest'
 import { removeDuplicates } from '../../helpers/productsHelper'
 
 enum PageState {
@@ -20,21 +21,33 @@ enum PageState {
 const MainPage = () => {
   const [items, setItems] = useState<Array<Product>>([])
   const [state, setState] = useState<number>(PageState.loading)
+
   const ids = useSelector((state: RootState) => state.product.ids)
+  const {step, current} = useSelector((state: RootState) => state.product.pagination)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const sendRequest = () => {
-      
       setState(PageState.loading)
-      postRequest(createRequest('get_items', { ids: ids.slice(0, 50) }))
-        .then(data => {
-          setItems(removeDuplicates(data.result, 'id'))
+      setItems([])
 
+      postRequest(
+        createRequest('get_items', {
+          ids: ids.slice(
+            current,
+            current + step,
+          ),
+        }),
+      )
+        .then(data => {
+          const nornalizeArray = removeDuplicates(data.result, 'id')
+
+          setItems(nornalizeArray)
           setState(PageState.ready)
         })
         .catch(err => {
-          sendRequest()
+          setState(PageState.error)
           console.error(err)
+          sendRequest()
         })
     }
 
@@ -43,7 +56,7 @@ const MainPage = () => {
     } else {
       setState(PageState.noResults)
     }
-  }, [ids])
+  }, [ids, current, step])
 
   switch (state) {
     case 1: {
@@ -57,7 +70,7 @@ const MainPage = () => {
         <div className='mainPage'>
           <div className='sortButton'>
             <p>Отсортировать по</p>
-            <Dropdown items={['Цене ↓', 'Цене ↑', 'Бренду', 'Названию']}/>
+            <Dropdown items={['Цене ↓', 'Цене ↑', 'Бренду', 'Названию']} />
           </div>
           <div className='wrapp'>
             {items.map((item, i) => (
@@ -70,6 +83,7 @@ const MainPage = () => {
               />
             ))}
           </div>
+          <Pagination />
         </div>
       )
     }

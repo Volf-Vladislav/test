@@ -23,9 +23,10 @@
 }
 
 .loading, .error, .noResults {
-    max-width: 80vw;
+    position: absolute;
+    top: 90px;
+    left: 20px;
 
     color: var(--activeColor);
     font-size: 22px;
-    margin: 20px;
 }
