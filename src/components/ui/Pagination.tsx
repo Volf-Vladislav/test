@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from '../../redux/store'
@@ -5,7 +6,7 @@ import { changePaginationState } from '../../redux/productSlice/productSlice'
 
 import PaginationType from '../../types/Pagination'
 
-const Pagination = () => {
+const Pagination = memo(() => {
   const { current, step } = useSelector(
     (state: RootState) => state.product.pagination,
   )
@@ -45,6 +46,6 @@ const Pagination = () => {
       )}
     </div>
   )
-}
+})
 
 export default Pagination

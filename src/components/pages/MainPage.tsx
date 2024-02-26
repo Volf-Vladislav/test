@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../redux/store'
 
 import Card from '../../components/templates/Card'
@@ -19,28 +19,31 @@ const MainPage = () => {
   const [state, setState] = useState<number>(PageState.loading)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
   const [selectedItem, setSelectedItem] = useState<string>('')
-
-  const ids = useSelector((state: RootState) => state.product.ids)
   const { step, current } = useSelector(
     (state: RootState) => state.product.pagination,
   )
+  const controllerRef = useRef<AbortController | null>(null)
+  const ids = useSelector((state: RootState) => state.product.ids)
+  const dispatch = useDispatch()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (controllerRef.current) {
+      controllerRef.current.abort()
+    }
+    const controller = new AbortController()
+    controllerRef.current = controller
+
     const sendRequest = () => {
-      setState(PageState.loading)
-
-      postRequest(
-        createRequest('get_items', {
-          ids,
-        }),
-      )
+      postRequest(createRequest('get_items', { ids }), controller.signal)
         .then(data => {
           const normalizedArray = removeDuplicates(data.result, 'id')
-
           setItems(sortBy(normalizedArray, selectedItem))
           setState(PageState.ready)
         })
         .catch(err => {
+          if (err.name === 'AbortError') {
+            return
+          }
           setState(PageState.error)
           console.error(err)
           sendRequest()
@@ -48,11 +51,14 @@ const MainPage = () => {
     }
 
     if (ids.length !== 0) {
+      setState(PageState.loading)
       sendRequest()
-    } else {
-      setState(PageState.noResults)
+    } else setState(PageState.noResults)
+
+    return () => {
+      controller.abort()
     }
-  }, [ids, current, selectedItem])
+  }, [ids, current, selectedItem, dispatch])
 
   switch (state) {
     case 1: {
@@ -64,21 +70,19 @@ const MainPage = () => {
     case 3: {
       return (
         <div className='mainPage'>
-          <div className='sortButton'>
-            <p>Отсортировать по</p>
-            <Dropdown
-              items={[
-                DropNames.first,
-                DropNames.second,
-                DropNames.third,
-                DropNames.fourth,
-              ]}
-              open={isDropdownOpen}
-              selectedItem={selectedItem}
-              setOpen={setIsDropdownOpen}
-              setSelectedItem={setSelectedItem}
-            />
-          </div>
+          <Dropdown
+            items={[
+              DropNames.first,
+              DropNames.second,
+              DropNames.third,
+              DropNames.fourth,
+            ]}
+            open={isDropdownOpen}
+            selectedItem={selectedItem}
+            setOpen={setIsDropdownOpen}
+            setSelectedItem={setSelectedItem}
+          />
+
           <div className='wrapp'>
             {items.slice(current, current + step).map((item, i) => (
               <Card
@@ -90,6 +94,7 @@ const MainPage = () => {
               />
             ))}
           </div>
+
           <Pagination />
         </div>
       )
@@ -97,6 +102,8 @@ const MainPage = () => {
     case 4: {
       return <div className='error'>Ошибка сервера, обновление</div>
     }
+    default:
+      return null
   }
 }
 

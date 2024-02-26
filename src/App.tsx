@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { RootState } from './redux/store'
@@ -17,7 +17,7 @@ const App = () => {
   const request = useSelector((state: RootState) => state.product.request)
   const dispatch = useDispatch()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     postRequest(request)
       .then(data => {
         const uniqueIds = removeSame(data.result)
@@ -25,6 +25,7 @@ const App = () => {
       })
       .catch(err => console.error(err))
   }, [request, dispatch])
+
 
   return (
     <main>

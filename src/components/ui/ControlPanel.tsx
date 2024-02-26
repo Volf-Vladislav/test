@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { changeRequest } from '../../redux/productSlice/productSlice'
 
@@ -13,9 +13,12 @@ const ControlPanel = () => {
 
   const dispatch = useDispatch()
 
-  const postNewRequest = useCallback((brand:string) => {
-    dispatch(changeRequest(createRequest('filter', { brand })))
-  }, [dispatch])
+  const postNewRequest = useCallback(
+    (brand: string) => {
+      dispatch(changeRequest(createRequest('filter', { brand })))
+    },
+    [dispatch],
+  )
 
   const nullFilters = () => {
     setPrice(0)
@@ -27,12 +30,13 @@ const ControlPanel = () => {
     dispatch(changeRequest(createRequest('filter', { price })))
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const getBrands = () => {
       postRequest({
-        action: 'get_fields',
-        params: { field: 'brand' },
-      })
+          action: 'get_fields',
+          params: { field: 'brand' },
+        }
+      )
         .then(data => setBrands(countBrandRepeats(data.result)))
         .catch(err => {
           console.error(err)

@@ -1,3 +1,5 @@
+import { memo } from "react"
+
 interface DropdownProps {
   items: string[]
   open: boolean
@@ -6,7 +8,7 @@ interface DropdownProps {
   setSelectedItem: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Dropdown = (props: DropdownProps) => {
+const Dropdown = memo((props: DropdownProps) => {
   const { items, open, selectedItem, setOpen, setSelectedItem } = props
 
   const handleItemClick = (item: string) => {
@@ -15,6 +17,8 @@ const Dropdown = (props: DropdownProps) => {
   }
 
   return (
+    <div className='sortButton'>
+    <p>Отсортировать по</p>
     <div className='dropdownContainer'>
       <div className='dropdownHeader' onClick={() => setOpen(prev => !prev)}>
         {selectedItem || 'Cортировкa'}
@@ -30,7 +34,8 @@ const Dropdown = (props: DropdownProps) => {
         </ul>
       )}
     </div>
+    </div>
   )
-}
+})
 
 export default Dropdown
