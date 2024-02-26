@@ -36,7 +36,6 @@ const ControlPanel = () => {
         .then(data => setBrands(countBrandRepeats(data.result)))
         .catch(err => {
           console.error(err)
-          getBrands()
         })
     }
 

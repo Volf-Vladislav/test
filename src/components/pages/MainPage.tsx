@@ -9,39 +9,35 @@ import Pagination from '../ui/Pagination'
 
 import createRequest from '../../helpers/createRequest'
 import postRequest from '../../api/postRequest'
-import { removeDuplicates } from '../../helpers/productsHelper'
+import { removeDuplicates, sortBy } from '../../helpers/productsHelper'
 
-enum PageState {
-  loading = 1,
-  noResults = 2,
-  ready = 3,
-  error = 4,
-}
+import PageState from '../../enums/PageState'
+import DropNames from '../../enums/DropNames'
 
 const MainPage = () => {
   const [items, setItems] = useState<Array<Product>>([])
   const [state, setState] = useState<number>(PageState.loading)
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+  const [selectedItem, setSelectedItem] = useState<string>('')
 
   const ids = useSelector((state: RootState) => state.product.ids)
-  const {step, current} = useSelector((state: RootState) => state.product.pagination)
+  const { step, current } = useSelector(
+    (state: RootState) => state.product.pagination,
+  )
 
   useLayoutEffect(() => {
     const sendRequest = () => {
       setState(PageState.loading)
-      setItems([])
 
       postRequest(
         createRequest('get_items', {
-          ids: ids.slice(
-            current,
-            current + step,
-          ),
+          ids,
         }),
       )
         .then(data => {
-          const nornalizeArray = removeDuplicates(data.result, 'id')
+          const normalizedArray = removeDuplicates(data.result, 'id')
 
-          setItems(nornalizeArray)
+          setItems(sortBy(normalizedArray, selectedItem))
           setState(PageState.ready)
         })
         .catch(err => {
@@ -56,7 +52,7 @@ const MainPage = () => {
     } else {
       setState(PageState.noResults)
     }
-  }, [ids, current, step])
+  }, [ids, current, selectedItem])
 
   switch (state) {
     case 1: {
@@ -70,10 +66,21 @@ const MainPage = () => {
         <div className='mainPage'>
           <div className='sortButton'>
             <p>Отсортировать по</p>
-            <Dropdown items={['Цене ↓', 'Цене ↑', 'Бренду', 'Названию']} />
+            <Dropdown
+              items={[
+                DropNames.first,
+                DropNames.second,
+                DropNames.third,
+                DropNames.fourth,
+              ]}
+              open={isDropdownOpen}
+              selectedItem={selectedItem}
+              setOpen={setIsDropdownOpen}
+              setSelectedItem={setSelectedItem}
+            />
           </div>
           <div className='wrapp'>
-            {items.map((item, i) => (
+            {items.slice(current, current + step).map((item, i) => (
               <Card
                 key={item.id + i}
                 price={item.price}

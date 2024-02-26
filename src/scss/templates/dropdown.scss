@@ -1,10 +1,10 @@
-.dropdown-container {
+.dropdownContainer {
     position: relative;
     width: 200px;
     font-family: Arial, sans-serif;
 }
 
-.dropdown-header {
+.dropdownHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,7 +16,7 @@
     border-radius: 12px;
 }
 
-.dropdown-list {
+.dropdownList {
     position: absolute;
     top: 100%;
     left: 0;
@@ -32,14 +32,14 @@
     z-index: 100;
 }
 
-.dropdown-list li {
+.dropdownList li {
     padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     color: var(--text);
 }
 
-.dropdown-list li:hover {
+.dropdownList li:hover {
     background-color: var(--buttonHover);
 }
 

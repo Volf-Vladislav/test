@@ -1,31 +1,28 @@
-import { useState } from 'react'
-
 interface DropdownProps {
   items: string[]
+  open: boolean
+  selectedItem: string
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedItem: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Dropdown = (props: DropdownProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [selectedItem, setSelectedItem] = useState<string>('')
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
+  const { items, open, selectedItem, setOpen, setSelectedItem } = props
 
   const handleItemClick = (item: string) => {
     setSelectedItem(item)
-    setIsOpen(false)
+    setOpen(false)
   }
 
   return (
-    <div className='dropdown-container'>
-      <div className='dropdown-header' onClick={toggleDropdown}>
+    <div className='dropdownContainer'>
+      <div className='dropdownHeader' onClick={() => setOpen(prev => !prev)}>
         {selectedItem || 'Cортировкa'}
-        <span className={`arrow ${isOpen ? 'open' : ''}`}>&#9660;</span>
+        <span className={`arrow ${open ? 'open' : ''}`}>&#9660;</span>
       </div>
-      {isOpen && (
-        <ul className='dropdown-list'>
-          {props.items.map((item, index) => (
+      {open && (
+        <ul className='dropdownList'>
+          {items.map((item, index) => (
             <li key={index} onClick={() => handleItemClick(item)}>
               {item}
             </li>
